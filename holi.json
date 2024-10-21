@@ -1,0 +1,133 @@
+{
+    "success": true,
+    "data": [
+        {
+            "id": 1,
+            "comment": "New stock entry",
+            "user_id": 1,
+            "category_movements_id": 1,
+            "provider_id": 1,
+            "voucher_id": 1,
+            "created_at": "2024-09-06T23:00:07.000000Z",
+            "category_movement": {
+                "id": 1,
+                "name": "Compra nacional",
+                "description": "Compra de productos nacionales",
+                "type": "entrada"
+            },
+            "voucher": {
+                "id": 1,
+                "series": "F001",
+                "number": "12345",
+                "amount": "1000.00",
+                "status": "pagado",
+                "issue_date": "2024-09-06",
+                "hash": null,
+                "concat": "F001-00012345",
+                "created_at": null
+            },
+            "provider": {
+                "id": 1,
+                "name": "Danitec",
+                "ruc": "20703150547",
+                "address": "Sullana",
+                "phone": "987837278",
+                "email": "admin@danitec.com"
+            },
+            "user": {
+                "id": 1,
+                "name": "Daniel moran vilchez"
+            },
+            "movements_details": [
+                {
+                    "id": 1,
+                    "product_batch_id": 1,
+                    "stock_movement_id": 1,
+                    "count": 5,
+                    "created_at": "2024-09-06T23:00:07.000000Z",
+                    "product__batch": {
+                        "id": 1,
+                        "product_id": 1,
+                        "batch_number": 1,
+                        "expiration_date": "2025-09-06",
+                        "price": 10.0,
+                        "quantity": 15,
+                        "product": {
+                            "id": 1,
+                            "code": "38684",
+                            "name": "Huevos6x30"
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "product_batch_id": 2,
+                    "stock_movement_id": 1,
+                    "count": 5,
+                    "created_at": "2024-09-06T23:00:07.000000Z"
+                },
+                {
+                    "id": 3,
+                    "product_batch_id": 3,
+                    "stock_movement_id": 1,
+                    "count": 10,
+                    "created_at": "2024-09-06T23:00:07.000000Z"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "comment": "Duplicate batch test",
+            "user_id": 1,
+            "category_movements_id": 1,
+            "provider_id": 1,
+            "voucher_id": 2,
+            "created_at": "2024-09-06T23:00:09.000000Z",
+            "category_movement": {
+                "id": 1,
+                "name": "Compra nacional",
+                "description": "Compra de productos nacionales",
+                "type": "entrada"
+            },
+            "voucher": {
+                "id": 2,
+                "series": "F002",
+                "number": "54321",
+                "amount": "2000.00",
+                "status": "pagado",
+                "issue_date": "2024-09-06",
+                "hash": null,
+                "concat": "F002-00054321",
+                "created_at": null
+            },
+            "provider": {
+                "id": 1,
+                "name": "Danitec",
+                "ruc": "20703150547",
+                "address": "Sullana",
+                "phone": "987837278",
+                "email": "admin@danitec.com"
+            },
+            "user": {
+                "id": 1,
+                "name": "Daniel moran vilchez"
+            },
+            "movements_details": [
+                {
+                    "id": 4,
+                    "product_batch_id": 1,
+                    "stock_movement_id": 2,
+                    "count": 10,
+                    "created_at": "2024-09-06T23:00:09.000000Z"
+                },
+                {
+                    "id": 5,
+                    "product_batch_id": 5,
+                    "stock_movement_id": 2,
+                    "count": 10,
+                    "created_at": "2024-09-06T23:00:09.000000Z"
+                }
+            ]
+        }
+    ]
+}
