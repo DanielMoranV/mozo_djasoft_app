@@ -18,22 +18,22 @@ use App\Interfaces\UnitRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\VoucherRepositoryInterface;
 use App\Interfaces\WarehouseRepositoryInterface;
-use App\repositories\CategoryMovementRepository;
+use App\Repositories\CategoryMovementRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CompanyRepository;
 use App\Repositories\MovementDetailRepository;
-use App\repositories\ParameterRepository;
+use App\Repositories\ParameterRepository;
 use App\Repositories\ProductBatchRepository;
 use App\Repositories\ProductRepository;
-use App\repositories\ProviderRepository;
-use App\repositories\PurchaseOrderDetailRepository;
-use App\repositories\PurchaseOrderRepository;
+use App\Repositories\ProviderRepository;
+use App\Repositories\PurchaseOrderDetailRepository;
+use App\Repositories\PurchaseOrderRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\StockMovementRepository;
 use App\Repositories\UnitRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\VoucherRepository;
-use App\repositories\WarehouseRepository;
+use App\Repositories\WarehouseRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider

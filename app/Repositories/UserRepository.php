@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -24,10 +25,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         // Verifica si el usuario tiene relaciones en otras tablas
         $hasRelations = $user->products()->exists() ||
-            $user->stockMovements()->exists();
-
+            $user->stockMovements()->exists() || $user->parameters()->exists();
+        Log::info('relaciones:' . $hasRelations);
         if ($hasRelations) {
-            // Si tiene relaciones, desactiva al usuario
+            // Si tiene relaciones con parámetros, elimina el registro de parámetros
+            if ($user->parameters()->exists()) {
+                $user->parameters()->delete(); // Eliminar registros de parámetros
+            }
+            // Desactiva al usuario
             $user->update(['is_active' => false]);
             return ['status' => 'disabled', 'user' => $user];
         } else {

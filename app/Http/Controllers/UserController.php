@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ApiResponseHelper;
+use App\Events\UserCreated;
+use App\Events\UserUpdated;
+use App\Events\UserDeleted;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -16,7 +19,7 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    private $relations = ['company', 'roles', 'parameter'];
+    private $relations = ['company', 'roles', 'parameters'];
     private UserRepositoryInterface $userRepositoryInterface;
     public function __construct(UserRepositoryInterface $userRepositoryInterface)
     {
@@ -74,10 +77,12 @@ class UserController extends Controller
                 $user->assignRole($role);
             }
 
-            // Reload user with relationships to include company and role details
-            //$user->load('company', 'roles');
-
             DB::commit();
+
+            // Emitir evento de usuario creado
+            event(new UserCreated($user));
+
+
             return ApiResponseHelper::sendResponse($user, 'Record created successfully', 201);
         } catch (\Exception $ex) {
             DB::rollBack();
@@ -150,9 +155,16 @@ class UserController extends Controller
 
         DB::beginTransaction();
         try {
-            $user =  $this->userRepositoryInterface->update($data, $id);
+            $user = $this->userRepositoryInterface->update($data, $id);
             DB::commit();
-            return ApiResponseHelper::sendResponse($user, 'Record updated succesful', 200);
+
+            // Cargar relaciones del usuario actualizado
+            $userWithRelations = $this->userRepositoryInterface->getById($id, $this->relations);
+
+            // Emitir evento de usuario actualizado
+            broadcast(new UserUpdated($userWithRelations))->toOthers();
+
+            return ApiResponseHelper::sendResponse(new UserResource($userWithRelations), 'Record updated successful', 200);
         } catch (\Exception $ex) {
             DB::rollBack();
             return ApiResponseHelper::rollback($ex);
@@ -191,9 +203,15 @@ class UserController extends Controller
         try {
             $result = $this->userRepositoryInterface->deleteUser($id);
 
+            Log::info($result);
+
             if ($result['status'] === 'disabled') {
+                // Emitir evento de usuario deshabilitado
+                //event(new UserDeleted($id, 'disabled'));
                 return ApiResponseHelper::sendResponse(null, 'Usuario deshabilitado exitosamente', 200);
             } elseif ($result['status'] === 'deleted') {
+                // Emitir evento de usuario eliminado
+                // event(new UserDeleted($id, 'deleted'));
                 return ApiResponseHelper::sendResponse(null, 'Usuario eliminado exitosamente', 200);
             }
         } catch (\Exception $e) {

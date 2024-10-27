@@ -23,8 +23,8 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'password' => $this->password,
             'company_id' => $this->company_id,
-            'parameter' => $this->whenLoaded('parameter') && $this->parameter->isNotEmpty()
-                ? new ParameterResource($this->parameter->first())
+            'parameter' => $this->whenLoaded('parameter') && $this->parameters->isNotEmpty()
+                ? new ParameterResource($this->parameters->first())
                 : null,
             'company' => new CompanyResource($this->whenLoaded('company')),
             'role' => $this->whenLoaded('roles') && $this->roles->isNotEmpty()

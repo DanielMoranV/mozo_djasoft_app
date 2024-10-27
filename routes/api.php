@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryMovementController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CustomBroadcastController;
 use App\Http\Controllers\ParameterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProviderController;
@@ -13,7 +14,12 @@ use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
+use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
+
+
+
 
 // Authentication Routes
 Route::prefix('auth')->group(function () {
@@ -102,3 +108,6 @@ Route::middleware(['auth:api', 'role:dev|admin'])->group(function () {
     Route::get('purchase-orders/{id}/pdf', [PurchaseOrderController::class, 'generatePdf'])->name('purchase-orders.generate-pdf');
     Route::post('purchase-orders/store-purchase-order-and-details', [PurchaseOrderController::class, 'storePurchaseOrderAndDetails'])->name('purchase-orders.store-purchase-order-and-details');
 });
+
+// Registrar la ruta de autorización de broadcasting
+//Broadcast::routes(['middleware' => ['auth:api']]);

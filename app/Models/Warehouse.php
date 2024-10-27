@@ -27,7 +27,7 @@ class Warehouse extends Model
         return $this->hasMany(Stock::class);
     }
 
-    public function parameter()
+    public function parameters()
     {
         return $this->hasMany(Parameter::class);
     }

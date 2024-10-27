@@ -14,7 +14,7 @@ use App\Http\Requests\AuthUserRequest;
 class AuthController extends Controller
 {
     protected $userRepository;
-    private $relations = ['company', 'roles', 'parameter'];
+    private $relations = ['company', 'roles', 'parameters'];
     public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;

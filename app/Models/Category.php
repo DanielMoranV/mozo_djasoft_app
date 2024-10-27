@@ -29,7 +29,7 @@ class Category extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function parameter()
+    public function parameters()
     {
         return $this->hasMany(Parameter::class);
     }

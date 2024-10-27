@@ -1,6 +1,6 @@
 <?php
 
-namespace App\repositories;
+namespace App\Repositories;
 
 use App\Interfaces\WarehouseRepositoryInterface;
 use App\Models\Warehouse;

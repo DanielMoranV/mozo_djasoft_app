@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('warehouse_id')->constrained('warehouses');
+            $table->foreignId('warehouse_id')->constrained('warehouses')->onDelete('cascade');
             $table->boolean('sunat_send')->default(false);
             $table->boolean('locked')->default(true);
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('company_id')->constrained('companies');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

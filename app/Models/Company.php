@@ -44,7 +44,7 @@ class Company extends Model
     {
         return $this->hasMany(Warehouse::class);
     }
-    public function parameter()
+    public function parameters()
     {
         return $this->hasMany(Parameter::class);
     }

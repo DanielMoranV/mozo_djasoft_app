@@ -13,7 +13,6 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-use function Pest\Laravel\get;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -89,7 +88,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(StockMovement::class);
     }
-    public function parameter()
+    public function parameters()
     {
         return $this->hasMany(Parameter::class);
     }
