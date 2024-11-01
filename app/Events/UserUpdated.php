@@ -30,7 +30,7 @@ class UserUpdated implements ShouldBroadcast, ShouldDispatchAfterCommit
     {
         // Usamos PrivateChannel en lugar de Channel
         return [
-            new Channel('users'),
+            new PrivateChannel('users'),
         ];
     }
 

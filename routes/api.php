@@ -109,5 +109,12 @@ Route::middleware(['auth:api', 'role:dev|admin'])->group(function () {
     Route::post('purchase-orders/store-purchase-order-and-details', [PurchaseOrderController::class, 'storePurchaseOrderAndDetails'])->name('purchase-orders.store-purchase-order-and-details');
 });
 
+// Ruta para validar el auth de broadcasting
+// Route::middleware(['auth:api'])->post('broadcasting/auth', function () {
+//     return response()->json(['message' => 'Authenticated for broadcasting'], 200);
+// })->name('broadcasting.auth')->middleware('auth:api')->fallback(function () {
+//     return response()->json(['error' => 'Unauthorized'], 401);
+// });
+
 // Registrar la ruta de autorización de broadcasting
 //Broadcast::routes(['middleware' => ['auth:api']]);

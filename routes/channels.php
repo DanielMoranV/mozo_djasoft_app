@@ -3,6 +3,7 @@
 use App\Broadcasting\UserChannel;
 use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 // Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
@@ -29,7 +30,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 //     return $user;
 // });
 
-Broadcast::routes(['middleware' => ['auth:api']]);
+//Broadcast::routes(['middleware' => ['auth:api']]);
 
 // // Canal privado 'users' con autenticación JWT
 // Broadcast::channel('users', function ($user) {
@@ -49,6 +50,8 @@ Broadcast::routes(['middleware' => ['auth:api']]);
 // });
 
 Broadcast::channel('users.{userId}', function ($user, $userId) {
+    Log::info($user);
+    Log::info($userId);
     return $user->id === $userId;
 });
 
