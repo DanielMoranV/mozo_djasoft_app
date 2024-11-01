@@ -25,7 +25,7 @@ class UserDeleted implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('users'),
+            new PrivateChannel('users.' . $this->userId),
         ];
     }
 

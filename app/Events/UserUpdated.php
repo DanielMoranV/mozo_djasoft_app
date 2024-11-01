@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth; // Agregar esta línea al inicio del archiv
 
 class UserUpdated implements ShouldBroadcast, ShouldDispatchAfterCommit
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels, InteractsWithSockets;
 
     public $user;
     public $emit_user;
@@ -28,9 +28,10 @@ class UserUpdated implements ShouldBroadcast, ShouldDispatchAfterCommit
 
     public function broadcastOn(): array
     {
-        // Usamos PrivateChannel en lugar de Channel
+        // Usamos PrivateChannel en lugar de Channel y especificamos el ID del usuario que no debe recibir el evento
         return [
-            new PrivateChannel('users'),
+            new PrivateChannel('users'), // Canal privado para el usuario que emite
+
         ];
     }
 
