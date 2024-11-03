@@ -30,6 +30,9 @@ services:
     networks:
       - laravel
 
+    ports:
+      - "6006:6002" # Mantener este puerto
+
   db:
     image: mysql:8.0
     container_name: laravel_db
@@ -50,6 +53,7 @@ services:
     restart: unless-stopped
     ports:
       - "8080:80"
+      - "6007:6002" # Cambiado de 6006 a 6007
     volumes:
       - .:/var/www
       - //c/laragon/www/mozo_djasoft_app/nginx/default.conf
