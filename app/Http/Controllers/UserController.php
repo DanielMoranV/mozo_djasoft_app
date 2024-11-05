@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ApiResponseHelper;
+use App\Events\TestEvent;
 use App\Events\UserCreated;
 use App\Events\UserUpdated;
 use App\Events\UserDeleted;
@@ -160,7 +161,6 @@ class UserController extends Controller
 
             // Cargar relaciones del usuario actualizado
             $userWithRelations = $this->userRepositoryInterface->getById($id, $this->relations);
-
             // Emitir evento de usuario actualizado
             broadcast(new UserUpdated($userWithRelations))->toOthers();
 

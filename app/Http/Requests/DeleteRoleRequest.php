@@ -6,6 +6,7 @@ use App\Classes\ApiResponseHelper;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 
 class DeleteRoleRequest extends FormRequest
 {
@@ -25,11 +26,12 @@ class DeleteRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|exists:roles,name'
+            'id' => 'required|exists:roles,id'
         ];
     }
     public function failedValidation(Validator $validator)
     {
+        Log::error($validator->errors());
         ApiResponseHelper::validationError($validator);
     }
 }

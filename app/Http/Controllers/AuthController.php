@@ -54,10 +54,18 @@ class AuthController extends Controller
         $credentials = $request->only(['dni', 'password']);
 
         if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return ApiResponseHelper::sendResponse(null, 'Unauthorized', 401);
         }
 
-        return $this->respondWithToken($token);
+        $user = auth()->user();
+        $user = $this->userRepository->getById($user->id, $this->relations);
+
+        return ApiResponseHelper::sendResponse([
+            'user' => new UserResource($user),
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => JWTAuth::factory()->getTTL() * 60
+        ], 'Datos del usuario autenticado');
     }
 
     public function me()
@@ -83,15 +91,11 @@ class AuthController extends Controller
 
     public function refresh()
     {
-        return $this->respondWithToken(JWTAuth::refresh());
-    }
-
-    protected function respondWithToken($token)
-    {
-        return response()->json([
+        $token = JWTAuth::refresh();
+        return ApiResponseHelper::sendResponse([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60
-        ]);
+        ], 'Token actualizado');
     }
 }

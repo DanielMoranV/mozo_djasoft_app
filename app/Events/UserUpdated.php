@@ -8,12 +8,13 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Auth; // Agregar esta línea al inicio del archivo
 
-class UserUpdated implements ShouldBroadcast, ShouldDispatchAfterCommit
+class UserUpdated implements ShouldBroadcastNow, ShouldDispatchAfterCommit
 {
     use Dispatchable, SerializesModels, InteractsWithSockets;
 

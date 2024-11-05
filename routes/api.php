@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryMovementController;
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\CustomBroadcastController;
 use App\Http\Controllers\ParameterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProviderController;
@@ -14,9 +13,8 @@ use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
-use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Broadcast;
+
 
 
 
@@ -45,9 +43,11 @@ Route::middleware(['auth:api', 'role:dev|admin'])->group(function () {
 });
 
 // Role Management Routes
-Route::middleware(['auth:api', 'role:dev|admin'])->prefix('roles')->group(function () {
+Route::middleware(['auth:api', 'role:dev'])->prefix('roles')->group(function () {
     Route::get('/', [RoleController::class, 'getRoles'])->name('roles.index');
     Route::post('/', [RoleController::class, 'store'])->name('roles.store');
+    Route::delete('/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::put('/{id}', [RoleController::class, 'update'])->name('roles.update');
     Route::put('/user', [RoleController::class, 'assignRole'])->name('roles.assign');
     Route::delete('/user', [RoleController::class, 'removeRole'])->name('roles.remove');
 });

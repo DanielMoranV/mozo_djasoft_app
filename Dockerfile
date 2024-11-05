@@ -1,5 +1,5 @@
 # Usar una imagen base de PHP con Composer y extensiones necesarias
-FROM php:8.2-fpm
+FROM php:8.3-fpm-alpine as build
 
 # Instalar dependencias necesarias
 RUN apt-get update && apt-get install -y \

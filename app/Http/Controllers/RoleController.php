@@ -8,6 +8,7 @@ use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -55,6 +56,18 @@ class RoleController extends Controller
         }
     }
 
+    public function update(UpdateRoleRequest $request)
+    {
+        $request->validated();
+        try {
+            $role = Role::where('id', $request->id)->firstOrFail();
+            $role->update($request->validated());
+            return ApiResponseHelper::sendResponse($role, 'Role updated successfully', 200);
+        } catch (\Exception $e) {
+            return ApiResponseHelper::rollback($e);
+        }
+    }
+
     public function getRoles()
     {
         try {
@@ -75,13 +88,13 @@ class RoleController extends Controller
         }
     }
 
-    public function destroy(DeleteRoleRequest $request)
+    public function destroy($id)
     {
         try {
-            $role = Role::where('name', $request->name)->firstOrFail();
+            $role = Role::where('id', $id)->firstOrFail();
             $role->delete();
 
-            return ApiResponseHelper::sendResponse(['message' => 'Role deleted successfully'], '', 204);
+            return ApiResponseHelper::sendResponse(null, 'Role deleted successfully', 204);
         } catch (\Exception $e) {
             return ApiResponseHelper::rollback($e);
         }
