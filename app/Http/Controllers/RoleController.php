@@ -22,16 +22,19 @@ class RoleController extends Controller
 
     public function assignRole(Request $request)
     {
+
         $request->validate([
             'dni' => 'required|exists:users,dni',
             'role_name' => 'required|string|exists:roles,name'
         ]);
+        Log::info($request->all());
 
         try {
             $user = $this->userRepository->findByDni($request->dni);
             $user->syncRoles([]);
             $role = Role::where('name', $request->role_name)->firstOrFail();
             $user->assignRole($role);
+            Log::info($user->roles);
             return ApiResponseHelper::sendResponse(['message' => 'Role assigned successfully']);
         } catch (\Exception $e) {
             return ApiResponseHelper::rollback($e);

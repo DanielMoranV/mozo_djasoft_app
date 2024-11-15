@@ -46,8 +46,8 @@ Route::middleware(['auth:api', 'role:dev|admin'])->group(function () {
 Route::middleware(['auth:api', 'role:dev'])->prefix('roles')->group(function () {
     Route::get('/', [RoleController::class, 'getRoles'])->name('roles.index');
     Route::post('/', [RoleController::class, 'store'])->name('roles.store');
-    Route::delete('/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
-    Route::put('/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/role/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::put('/role/{id}', [RoleController::class, 'update'])->name('roles.update');
     Route::put('/user', [RoleController::class, 'assignRole'])->name('roles.assign');
     Route::delete('/user', [RoleController::class, 'removeRole'])->name('roles.remove');
 });

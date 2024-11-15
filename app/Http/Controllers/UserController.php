@@ -17,14 +17,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
+use App\Interfaces\ParameterRepositoryInterface;
 
 class UserController extends Controller
 {
     private $relations = ['company', 'roles', 'parameters'];
     private UserRepositoryInterface $userRepositoryInterface;
-    public function __construct(UserRepositoryInterface $userRepositoryInterface)
+    private ParameterRepositoryInterface $parameterRepositoryInterface;
+    public function __construct(UserRepositoryInterface $userRepositoryInterface, ParameterRepositoryInterface $parameterRepositoryInterface)
     {
         $this->userRepositoryInterface = $userRepositoryInterface;
+        $this->parameterRepositoryInterface = $parameterRepositoryInterface;
     }
 
 
@@ -81,10 +84,11 @@ class UserController extends Controller
             DB::commit();
 
             // Emitir evento de usuario creado
-            event(new UserCreated($user));
+            $dataUser = $this->userRepositoryInterface->getById($user->id, $this->relations);
+            event(new UserCreated($dataUser));
 
 
-            return ApiResponseHelper::sendResponse($user, 'Record created successfully', 201);
+            return ApiResponseHelper::sendResponse($dataUser, 'Record created successfully', 201);
         } catch (\Exception $ex) {
             DB::rollBack();
             return ApiResponseHelper::rollback($ex);
@@ -118,6 +122,19 @@ class UserController extends Controller
                         $role = Role::where('name', $userData['role'])->firstOrFail();
                         $user->assignRole($role);
                     }
+
+                    // Asignar parametros
+                    $currentUser = auth()->user();
+                    $parameters = [
+                        'user_id' => $user->id,
+                        'company_id' => $currentUser->company_id,
+                        'warehouse_id' => $currentUser->warehouse_id,
+                        'sunat_send' => $currentUser->sunat_send,
+                        'locked' => true,
+                    ];
+
+                    $this->parameterRepositoryInterface->store($parameters);
+
                     $dataUser = $this->userRepositoryInterface->getById($user->id, $this->relations);
 
                     // Agregar registro exitoso
@@ -202,17 +219,16 @@ class UserController extends Controller
     {
         try {
             $result = $this->userRepositoryInterface->deleteUser($id);
-
-            Log::info($result);
-
             if ($result['status'] === 'disabled') {
                 // Emitir evento de usuario deshabilitado
-                //event(new UserDeleted($id, 'disabled'));
-                return ApiResponseHelper::sendResponse(null, 'Usuario deshabilitado exitosamente', 200);
+                broadcast(new UserDeleted($id, 'disabled'))->toOthers();
+                $message = 'Usuario deshabilitado exitosamente';
+                return ApiResponseHelper::sendResponse($message, 'Usuario deshabilitado exitosamente', 200);
             } elseif ($result['status'] === 'deleted') {
                 // Emitir evento de usuario eliminado
-                // event(new UserDeleted($id, 'deleted'));
-                return ApiResponseHelper::sendResponse(null, 'Usuario eliminado exitosamente', 200);
+                broadcast(new UserDeleted($id, 'deleted'))->toOthers();
+                $message = 'Usuario eliminado exitosamente';
+                return ApiResponseHelper::sendResponse($message, 'Usuario eliminado exitosamente', 200);
             }
         } catch (\Exception $e) {
             return ApiResponseHelper::rollback($e, 'Error al eliminar el usuario');

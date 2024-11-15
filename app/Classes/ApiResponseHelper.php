@@ -51,6 +51,8 @@ class ApiResponseHelper
             $response['message'] = $message;
         }
 
+        Log::info('Respuesta de la API', ['response' => $response]);
+
         return response()->json($response, $code);
     }
 
