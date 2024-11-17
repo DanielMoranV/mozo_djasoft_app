@@ -8,6 +8,8 @@ use App\Http\Requests\StoreProviderRequest;
 use App\Http\Requests\UpdateProviderRequest;
 use App\Http\Resources\ProviderResource;
 use App\Interfaces\ProviderRepositoryInterface;
+use Illuminate\Support\Facades\DB;
+
 
 class ProviderController extends Controller
 {
@@ -70,6 +72,14 @@ class ProviderController extends Controller
      */
     public function destroy(Provider $provider)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $provider = $this->providerRepositoryInterface->delete($provider);
+            DB::commit();
+            return ApiResponseHelper::sendResponse(new ProviderResource($provider), 'Record deleted succesful', 200);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return ApiResponseHelper::rollback($ex);
+        }
     }
 }

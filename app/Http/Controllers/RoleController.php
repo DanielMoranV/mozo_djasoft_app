@@ -10,6 +10,8 @@ use App\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\RoleResource;
 
 class RoleController extends Controller
 {
@@ -93,12 +95,14 @@ class RoleController extends Controller
 
     public function destroy($id)
     {
+        DB::beginTransaction();
         try {
             $role = Role::where('id', $id)->firstOrFail();
             $role->delete();
-
-            return ApiResponseHelper::sendResponse(null, 'Role deleted successfully', 204);
+            DB::commit();
+            return ApiResponseHelper::sendResponse(new RoleResource($role), 'Role deleted successfully', 204);
         } catch (\Exception $e) {
+            DB::rollBack();
             return ApiResponseHelper::rollback($e);
         }
     }

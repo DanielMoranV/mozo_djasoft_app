@@ -133,7 +133,14 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->productRepositoryInterface->delete($id);
-        return ApiResponseHelper::sendResponse(null, 'Record deleted succesful', 200);
+        DB::beginTransaction();
+        try {
+            $product = $this->productRepositoryInterface->delete($id);
+            DB::commit();
+            return ApiResponseHelper::sendResponse(new ProductResource($product), 'Record deleted succesful', 200);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return ApiResponseHelper::rollback($ex);
+        }
     }
 }

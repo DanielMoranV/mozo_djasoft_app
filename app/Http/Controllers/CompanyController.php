@@ -94,9 +94,9 @@ class CompanyController extends Controller
 
         DB::beginTransaction();
         try {
-            $this->companyRepositoryInterface->update($data, $id);
+            $company = $this->companyRepositoryInterface->update($data, $id);
             DB::commit();
-            return ApiResponseHelper::sendResponse(null, 'Record updated succesful', 200);
+            return ApiResponseHelper::sendResponse(new CompanyResource($company), 'Record updated succesful', 200);
         } catch (\Exception $ex) {
             DB::rollBack();
             return ApiResponseHelper::rollback($ex);
@@ -128,7 +128,14 @@ class CompanyController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->companyRepositoryInterface->delete($id);
-        return ApiResponseHelper::sendResponse(null, 'Record deleted succesful', 200);
+        DB::beginTransaction();
+        try {
+            $company = $this->companyRepositoryInterface->delete($id);
+            DB::commit();
+            return ApiResponseHelper::sendResponse(new CompanyResource($company), 'Record deleted succesful', 200);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return ApiResponseHelper::rollback($ex);
+        }
     }
 }

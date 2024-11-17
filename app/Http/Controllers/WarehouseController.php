@@ -8,6 +8,7 @@ use App\Http\Requests\StoreWarehouseRequest;
 use App\Http\Requests\UpdateWarehouseRequest;
 use App\Http\Resources\WarehouseResource;
 use App\Interfaces\WarehouseRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 class WarehouseController extends Controller
 {
@@ -68,6 +69,14 @@ class WarehouseController extends Controller
      */
     public function destroy(Warehouse $warehouse)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $warehouse = $this->warehouseRepositoryInterface->delete($warehouse);
+            DB::commit();
+            return ApiResponseHelper::sendResponse(new WarehouseResource($warehouse), 'Record deleted succesful', 200);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return ApiResponseHelper::rollback($ex);
+        }
     }
 }

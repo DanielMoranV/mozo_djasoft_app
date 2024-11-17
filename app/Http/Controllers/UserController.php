@@ -127,9 +127,9 @@ class UserController extends Controller
                     $currentUser = auth()->user();
                     $parameters = [
                         'user_id' => $user->id,
-                        'company_id' => $currentUser->company_id,
-                        'warehouse_id' => $currentUser->warehouse_id,
-                        'sunat_send' => $currentUser->sunat_send,
+                        'company_id' => $currentUser->company_id ?? 1,
+                        'warehouse_id' => $currentUser->warehouse_id ?? 1,
+                        'sunat_send' => $currentUser->sunat_send ?? false,
                         'locked' => true,
                     ];
 

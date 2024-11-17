@@ -79,8 +79,15 @@ class PurchaseOrderController extends Controller
 
     public function destroy(string $id)
     {
-        $this->purchaseOrderRepositoryInterface->delete($id);
-        return ApiResponseHelper::sendResponse(null, 'Record deleted succesful', 200);
+        DB::beginTransaction();
+        try {
+            $purchaseOrder = $this->purchaseOrderRepositoryInterface->delete($id);
+            DB::commit();
+            return ApiResponseHelper::sendResponse(new PurchaseOrderResource($purchaseOrder), 'Record deleted succesful', 200);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return ApiResponseHelper::rollback($ex);
+        }
     }
 
     public function storePurchaseOrderAndDetails(StorePurchaseOrderAndDetailsRequest $request)

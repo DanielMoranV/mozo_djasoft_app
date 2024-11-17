@@ -78,7 +78,14 @@ class ParameterController extends Controller
 
     public function destroy(string $id)
     {
-        $this->parameterRepositoryInterface->delete($id);
-        return  ApiResponseHelper::sendResponse(null, 'Record deleted succesful', 200);
+        DB::beginTransaction();
+        try {
+            $parameter = $this->parameterRepositoryInterface->delete($id);
+            DB::commit();
+            return ApiResponseHelper::sendResponse(new ParameterResource($parameter), 'Record deleted succesful', 200);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return ApiResponseHelper::rollback($ex);
+        }
     }
 }

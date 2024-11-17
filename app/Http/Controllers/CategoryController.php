@@ -120,7 +120,14 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->categoryRepositoryInterface->delete($id);
-        return ApiResponseHelper::sendResponse('', 'Record delete succesful', 200);
+        DB::beginTransaction();
+        try {
+            $category = $this->categoryRepositoryInterface->delete($id);
+            DB::commit();
+            return ApiResponseHelper::sendResponse(new CategoryResource($category), 'Record delete succesful', 200);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return ApiResponseHelper::rollback($ex);
+        }
     }
 }

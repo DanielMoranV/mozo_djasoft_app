@@ -120,7 +120,14 @@ class UnitController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->unitRepositoryInterface->delete($id);
-        return ApiResponseHelper::sendResponse('', 'Record delete succesful', 200);
+        DB::beginTransaction();
+        try {
+            $unit = $this->unitRepositoryInterface->delete($id);
+            DB::commit();
+            return ApiResponseHelper::sendResponse(new UnitResource($unit), 'Record delete succesful', 200);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return ApiResponseHelper::rollback($ex);
+        }
     }
 }

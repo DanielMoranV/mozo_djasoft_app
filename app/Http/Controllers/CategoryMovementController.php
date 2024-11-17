@@ -69,9 +69,9 @@ class CategoryMovementController extends Controller
     {
         DB::beginTransaction();
         try {
-            $this->categoryMovementRepositoryInterface->delete($id);
+            $categoryMovement = $this->categoryMovementRepositoryInterface->delete($id);
             DB::commit();
-            return ApiResponseHelper::sendResponse([], 'Movimiento de categoría eliminado correctamente', 200);
+            return ApiResponseHelper::sendResponse(new CategoryMovementResource($categoryMovement), 'Movimiento de categoría eliminado correctamente', 200);
         } catch (\Exception $ex) {
             DB::rollBack();
             return ApiResponseHelper::rollback($ex);
