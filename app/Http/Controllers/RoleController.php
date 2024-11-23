@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\RoleResource;
+use App\Http\Resources\UserResource;
 
 class RoleController extends Controller
 {
@@ -37,7 +38,7 @@ class RoleController extends Controller
             $role = Role::where('name', $request->role_name)->firstOrFail();
             $user->assignRole($role);
             Log::info($user->roles);
-            return ApiResponseHelper::sendResponse(['message' => 'Role assigned successfully']);
+            return ApiResponseHelper::sendResponse(new UserResource($user), 'Role assigned successfully');
         } catch (\Exception $e) {
             return ApiResponseHelper::rollback($e);
         }
